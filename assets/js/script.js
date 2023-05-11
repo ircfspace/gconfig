@@ -38,7 +38,7 @@ function exec() {
             return false;
         }
         node_data = node_data.replace(/(\"host\": ?\")(.*?)(\"\,)/,"$1"+node_host+"$3");
-        for(var i = 0; i < (cdnip.length >= 15 ? 15 : cdnip.length); i++){
+        for(var i = 0; i < (cdnip.length >= 30 ? 30 : cdnip.length); i++){
             node_data = node_data.replace(/(\"add\": ?\")(.*?)(\"\,)/,"$1"+cdnip[i]+"$3");
             nodes.push(vmess_pre+btoa(node_data)+"\n")
         }
@@ -58,7 +58,7 @@ function exec() {
         else {
             sample_node = sample_node.replace(/(@)(.*?)(:)(.*?)(\?)/,"$1$2$3$4$5host="+node_host+"&");
         }
-        for (let i = 0; i < (cdnip.length >= 15 ? 15 : cdnip.length); i++) {
+        for (let i = 0; i < (cdnip.length >= 30 ? 30 : cdnip.length); i++) {
             nodes.push(sample_node.replace(/(@)(.*?)(:)/,"$1"+cdnip[i]+"$3")+"\n");
         }
         out.html(nodes);

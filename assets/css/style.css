@@ -209,15 +209,15 @@ img[alt="loader"] {
 	border: 1px solid #cbcbcb;
 	border-radius: 5px;
 }
-.fullBox .leftSide {
+.fullBox {
 	float: left;
-	width: calc(100% - 170px);
+	width: 100%;
 }
-.fullBox .leftSide textarea {
-	height: 160px;
+.fullBox textarea {
+	height: 150px;
 	margin: 0;
 }
-.fullBox .leftSide textarea[readonly] {
+.fullBox textarea[readonly] {
 	background: #fff;
 }
 
