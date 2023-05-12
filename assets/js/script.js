@@ -37,7 +37,9 @@ function exec() {
             $("#errorMsg").removeClass('hidden');
             return false;
         }
-        node_data = node_data.replace(/(\"host\": ?\")(.*?)(\"\,)/,"$1"+node_host+"$3");
+        if ( ! isValidIp( JSON.parse(node_data).add ) ) {
+            node_data = node_data.replace(/(\"host\": ?\")(.*?)(\"\,)/,"$1"+node_host+"$3");
+        }
         for(var i = 0; i < (cdnip.length >= 30 ? 30 : cdnip.length); i++){
             node_data = node_data.replace(/(\"add\": ?\")(.*?)(\"\,)/,"$1"+cdnip[i]+"$3");
             nodes.push(vmess_pre+btoa(node_data)+"\n")
@@ -52,11 +54,12 @@ function exec() {
             return false;
         }
         let node_host=sample_node.match(re)[1];
-        if (sample_node.indexOf("host=") !== -1) {
-            sample_node = sample_node.replace(/(host=)(.*?)(&)/,"$1"+node_host+"$3");
-        }
-        else {
-            sample_node = sample_node.replace(/(@)(.*?)(:)(.*?)(\?)/,"$1$2$3$4$5host="+node_host+"&");
+        if ( ! isValidIp( getAddress(sample_node)[0] ) ) {
+            if (sample_node.indexOf("host=") !== -1) {
+                sample_node = sample_node.replace(/(host=)(.*?)(&)/, "$1" + node_host + "$3");
+            } else {
+                sample_node = sample_node.replace(/(@)(.*?)(:)(.*?)(\?)/, "$1$2$3$4$5host=" + node_host + "&");
+            }
         }
         for (let i = 0; i < (cdnip.length >= 30 ? 30 : cdnip.length); i++) {
             nodes.push(sample_node.replace(/(@)(.*?)(:)/,"$1"+cdnip[i]+"$3")+"\n");
