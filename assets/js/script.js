@@ -10,6 +10,11 @@ $(document).on('keyup', '#cleanIp', function(e) {
     exec();
 });
 
+$(document).on('click', '#updater', function(e) {
+    e.preventDefault();
+    exec();
+});
+
 function exec() {
     let cdnip;
     let provider = getCleanIp();
@@ -29,6 +34,10 @@ function exec() {
     let nodes =new Array();
     $("#result").addClass('hidden');
     $("#errorMsg").addClass('hidden');
+    $('#updater').html('کمی صبر کنید ...');
+    setTimeout(function() {
+        $('#updater').html('بروزرسانی کانفیگ');
+    }, 1000);
     if (sample_node.indexOf(vmess_pre) === 0) {
         let node_data = atob(sample_node.slice(vmess_pre.length,sample_node.length))
         let re = /\"add\": ?\"(.*?)\"/;
