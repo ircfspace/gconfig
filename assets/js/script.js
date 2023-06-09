@@ -1,4 +1,4 @@
-$(document).on('keyup change paste', '#in', function(e) {
+$(document).on('keyup input', '#in', function(e) {
     exec();
 });
 
@@ -6,7 +6,7 @@ $(document).on('keyup', '#provider', function(e) {
     exec();
 });
 
-$(document).on('keyup change paste', '#cleanIp', function(e) {
+$(document).on('keyup input', '#cleanIp', function(e) {
     exec();
 });
 
