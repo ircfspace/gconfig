@@ -20,6 +20,9 @@ function exec() {
         cdnip = JSON.parse('["'+provider+'"]');
     }
     let sample_node = ($("#in").val()).replace(/[\r\n]/g, "").replace(/\ +/g, "");
+    if ( sample_node === '' ) {
+        return false;
+    }
     let out = $("#out");
     let vmess_pre = "vmess://"
     let vless_pre = "vless://"
@@ -30,6 +33,10 @@ function exec() {
         let node_data = atob(sample_node.slice(vmess_pre.length,sample_node.length))
         let re = /\"add\": ?\"(.*?)\"/;
         let node_host=node_data.match(re)[1];
+        if ( ! ['443', '80'].includes( JSON.parse(node_data).port ) ) {
+            $("#errorMsg").removeClass('hidden');
+            return false;
+        }
         node_data = node_data.replace(/(\"host\": ?\")(.*?)(\"\,)/,"$1"+node_host+"$3");
         for(var i = 0; i < cdnip.length; i++){
             node_data = node_data.replace(/(\"add\": ?\")(.*?)(\"\,)/,"$1"+cdnip[i]+"$3");
@@ -40,6 +47,10 @@ function exec() {
     }
     else if ( sample_node.indexOf(vless_pre) === 0 ){
         let re=/@(.*?):/;
+        if ( ! ['443', '80'].includes( getAddress(sample_node)[1] ) ) {
+            $("#errorMsg").removeClass('hidden');
+            return false;
+        }
         let node_host=sample_node.match(re)[1];
         if (sample_node.indexOf("host=") !== -1) {
             sample_node = sample_node.replace(/(host=)(.*?)(&)/,"$1"+node_host+"$3");
@@ -54,9 +65,7 @@ function exec() {
         $("#result").removeClass('hidden');
     }
     else {
-        $("#errorMsg p").html("کانفیگ شما باید از نوع VMESS یا VLESS با پورت ۴۴۳ یا ۸۰ باشد.");
         $("#errorMsg").removeClass('hidden');
-
     }
 }
 
@@ -105,4 +114,49 @@ function isValidIp(string) {
     }
     catch (e) { }
     return false;
+}
+
+function getProtocol(config) {
+    let string = config.split("://");
+    if ( typeof string[0] !== 'undefined' ) {
+        return string[0];
+    }
+    return '';
+}
+
+function base64Decode(config) {
+    try {
+        config = config.replace("vmess://", "");
+        return JSON.parse(atob(config));
+    }
+    catch {
+        return {};
+    }
+}
+
+function getAddress(config) {
+    let protocol = getProtocol(config);
+    if ( protocol === 'vmess' ) {
+        config = base64Decode(config);
+        return [
+            config.add,
+            String(config.port),
+        ]
+    }
+    else {
+        let string = config.split("@");
+        if ( typeof string[1] !== 'undefined' ) {
+            string = string[1].split("?");
+            if ( typeof string[0] !== 'undefined' ) {
+                string = string[0].split(":");
+                if ( typeof string[0] !== 'undefined' && typeof string[1] !== 'undefined' ) {
+                    return [
+                        string[0],
+                        string[1].split("#")[0],
+                    ]
+                }
+            }
+        }
+    }
+    return ['', ''];
 }
