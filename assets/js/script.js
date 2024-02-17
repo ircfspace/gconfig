@@ -31,14 +31,14 @@ function exec() {
     let out = $("#out");
     let vmess_pre = "vmess://"
     let vless_pre = "vless://"
-    let nodes =new Array();
+    let nodes = new Array();
     $("#result").addClass('hidden');
     $("#errorMsg").addClass('hidden');
     $('#updater').html('کمی صبر کنید ...');
     setTimeout(function() {
         $('#updater').html('بروزرسانی کانفیگ');
     }, 1000);
-    if (sample_node.indexOf(vmess_pre) === 0) {
+    if (sample_node.substring(0, 8) === vmess_pre) {
         let node_data = atob(sample_node.slice(vmess_pre.length,sample_node.length))
         let re = /\"add\": ?\"(.*?)\"/;
         let node_host=node_data.match(re)[1];
@@ -56,7 +56,7 @@ function exec() {
         out.html(nodes);
         $("#result").removeClass('hidden');
     }
-    else if ( sample_node.indexOf(vless_pre) === 0 ){
+    else if ( sample_node.substring(0, 8) === vless_pre ){
         let re=/@(.*?):/;
         if ( ! ['443', '80'].includes( getAddress(sample_node)[1] ) ) {
             $("#errorMsg").removeClass('hidden');
